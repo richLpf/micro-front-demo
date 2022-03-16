@@ -1,16 +1,34 @@
----
-theme: cyanosis
----
-# 一、微前端概述
+# 一、前言
 
+[文章地址](https://juejin.cn/post/7075607657205710855)
 
+大型中后台项目一般包括10个以上的子项目，如果维护在一个单页面应用中，项目就会越来越大，而且不利于版本的迭代，微前端就很好的解决了这些问题。
+
+这篇文章主要来体验下蚂蚁的微前端：qiankun，虽然比较成熟了，但在体验过程中还是有一些问题，记录总结下，[项目代码](https://github.com/richLpf/micro-front-demo)
+
+实践项目以react单页面应用为主应用，然后构建了三个微应用：react、vue3、node静态页面
+
+启动项目
+
+```
+
+git clone
+
+cd micro-front-demo
+
+yarn install
+
+yarn start
+
+```
+访问地址：http://localhost:10000
 # 二、前期准备
 
-> 微前端要求多个前端服务，所以我们这里先准备几个应用，使用不同的技术栈，体验微前端服务的强大
+> 微前端要求多个前端服务，所以我们先准备几个应用，使用不同的技术栈，体验微前端的强大
 
 ## 1、项目架构
 
-`mirco-front-demo`作为整个服务的目录，为了便于实践，主应用和微应用将放在一起。
+`mirco-front-demo`作为整个服务的根目录，为了便于实践，主应用和微应用将放在一起。
 
 主应用：
 - my-app
@@ -48,6 +66,10 @@ yarn start
 
 ## 3、微应用micro-react-1
 
+```
+cd micro-front-demo
+npx create-react-app micro-react-1
+```
 同主应用一样创建一个React应用，命名`micro-react-1`，并修改启动端口号（也可以使用.env文件修改）
 
 修改启动端口号：
@@ -168,7 +190,7 @@ yarn start
 
 ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/81c37dce1d004cbe8771c98c4b9c2cdb~tplv-k3u1fbpfcp-watermark.image?)
 
-在侧边栏点击不同的链接会加载不同的子应用，样式和路由具体可以看[示例代码]()
+在侧边栏点击不同的链接会加载不同的子应用，样式和路由具体可以看[示例代码](https://github.com/richLpf/micro-front-demo)
 
 ## 2、注册微应用
 
@@ -185,7 +207,7 @@ yarn add qiankun
 
 ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa4b3baf34c8458680355acc2cca0d1c~tplv-k3u1fbpfcp-watermark.image?)
 
-在`index.js`中配置
+在`src/index.js`中配置
 
 ```js
 import React from 'react';
@@ -278,7 +300,7 @@ export async function unmount(props) {
   ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root') : document.querySelector('#root'));
 }
 ```
-给微应用添加声明周期函数，当微应用挂载成功时渲染到当前应用的root节点。
+给微应用添加导出声明周期函数，微应用挂载成功时，渲染到当前应用的root节点。
 
 当前cra并没有释放webpack配置，所以要通过插件覆盖配置:
 
@@ -310,7 +332,6 @@ module.exports = {
     },
     devServer: (_) => {
         const config = _;
-    
         config.headers = {
           'Access-Control-Allow-Origin': '*',
         };
@@ -338,7 +359,7 @@ if (window.__POWERED_BY_QIANKUN__) {
 }
 ```
 
-引入vue路由，设置成history模式，baseRouter设置成vue，导出声明周期
+引入vue路由，设置成history模式，baseRouter设置成vue，导出声明周期函数
 
 ```js
 import { createApp } from 'vue'
@@ -384,6 +405,7 @@ module.exports = defineConfig({
     }
 })
 ```
+启动应用`yarn serve`
 
 ### 3) micro-static-3
 
@@ -420,6 +442,7 @@ const render = ($) => {
 
 其实也是挂载在了app节点。
 
+启动当前微服务`node index.js`
 
 ## 4、启动所有应用
 

@@ -6,10 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm-run-all --parallel start:*",
+    "install": "npm-run-all --serial install:*",
     "start:main": "cd my-app && yarn start",
     "start:micro-react": "cd micro-react-1 && yarn start",
     "start:micro-vue": "cd micro-vue-2 && yarn serve",
-    "start:micro-static": "cd micro-static-3 && node index.js"
+    "start:micro-static": "cd micro-static-3 && node index.js",
+    "install:main": "cd my-app && yarn install",
+    "install:micro-react": "cd micro-app-1 && yarn install",
+    "install:micro-vue": "cd micro-vue-2 && yarn install",
+    "install:micro-static": "cd micro-static-3 && yarn install"
   },
   "author": "",
   "license": "ISC",
